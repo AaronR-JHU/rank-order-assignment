@@ -23,6 +23,8 @@ function test_data = generate_test_data(num_doctors, num_hospitals)
     for i = 1:num_doctors
         test_data(i, :) = randperm(num_hospitals, num_hospitals);
     end
+    % to sort to cost look at value of first entry and map 1 to that index,
+    % look at second value map 2 to that index ect.
 end
 
 function test_data = hungarian_test_data(capacity, test_data, numDoctors)
