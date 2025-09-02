@@ -17,7 +17,4 @@ function filtered_choices = preprocessing(doctor_choices, capacities)
 filtered_choices = doctor_choices(any(doctor_choices,2), :)
 % Process incomplete data (less than 5 entries)
 
-% Truncate overcomplete data (more than 5 entries) -- this will work for
-% cells only
-filtered_choices = filtered_choices(cellfun(@length, filtered_choices) <= 5)
 % Process bad data (same hospital twice)

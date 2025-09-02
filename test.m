@@ -1,4 +1,4 @@
-function capacity = test()
+function [capacity, test_data] = test()
 % Initialize parameters for test data generation
     numDoctors = 10; 
     numHospitals = 5; 
