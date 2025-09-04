@@ -17,4 +17,8 @@ function [assignment, totalCost] = optimization(input_data)
 
     % Calculate the total cost of the assignment
     totalCost = sum(input_data(sub2ind(size(input_data), 1:numRows, assignment)));
+
+    % Print out the list of which doctor is assigned to which hospital
+    for k = 1:length(assignment)
+        fprintf('Doctor %d assigned to Hospital %d\n', k, assignment(k));
 end
