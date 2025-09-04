@@ -4,16 +4,23 @@
 % Unmatched doctors are held to the end of assigment and then assigned to
 % the hopital with the most need (least number of doctors).
 
-function [assignment, totalCost] = optimization(input_data)
+function [assignment, totalCost] = optimization(input_data, capacity)
     % Initialize the cost matrix based on input data
     % Check if the cost matrix is square
     [numRows, numCols] = size(input_data);
     if numRows ~= numCols
-        error('Cost matrix must be square.');
+        % Adds rows of value inf so hungarian can be run
+        disp('Dummy rows added')
+        input_data = [input_data; inf*ones(numCols-numRows, numCols)]; 
     end
 
     % Use the built-in 'munkres' function if available
     assignment = munkres(input_data);
+
+    % Corrects the assignment vector to show the mutiple capacity of each
+    % hospital
+    assignment = assignment(:,1:numRows);
+    assignment = mod(assignment - 1, numCols/capacity) + 1;
 
     % Calculate the total cost of the assignment
     totalCost = sum(input_data(sub2ind(size(input_data), 1:numRows, assignment)));
