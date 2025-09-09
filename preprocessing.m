@@ -16,8 +16,41 @@ function filtered_choices = preprocessing(doctor_choices, capacities)
 % Given a cell array of the of the ranked list of hospitals per doctor
 % we first go through remove any duplicate entries in the rankings. Next 
 % remove the last entry of the ranking if it is more than the listed number
-% of 
+% of hospitals. Finally, search rankings that are short of choices for the
+% missing choices and add them to the end of the rankings.
+% After processing convert the cell matrix into a matrix and then sort the
+% entries into a cost matrix for the Hungarian algorthm that we use then
+% duplicate the columns of the array based on the capacites of each
+% hostpital.
 
-% Process incomplete data (less than 5 entries)
+% Initalizing some useful variables
+numHos = length(capacities);
+numDoc = length(doctor_choices);
+hospitals = (1:numHos);
 
-% Process bad data (same hospital twice)
+for k = 1:length(doctor_choices)
+    doctor_choices{k} = unique(doctor_choices{k}, 'stable');
+    if length(doctor_choices{k}) > numHos
+        doctor_choices{k} = doctor_choices{k}(1:numHos);
+    end
+    missing = setdiff(doctor_choices{k}, hospitals, 'stable');
+    doctor_choices{k} = [doctor_choices{k}, missing]; 
+end
+
+% Convert cell array to matrix
+doctor_mat = cell2mat(doctor_choices);
+
+% Create the cost matrix
+cost_mat = zeros(numDoc, numHos);
+    for k = 1:numDoc
+        for i = 1:numHos
+            cost_mat(k, doctor_mat(k,i)) = i;
+        end
+    end
+  
+% Duplicate columns of the cost matrix based on the capacity for the
+% hospital that the column represents. ex hospital with capacity 3 with
+% have the column duplicated 3 times.
+
+% Placeholder so i can test the other parts
+filtered_choices = cost_mat
