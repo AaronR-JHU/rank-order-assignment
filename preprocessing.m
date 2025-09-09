@@ -13,8 +13,11 @@ function filtered_choices = preprocessing(doctor_choices, capacities)
     %   each doctor would prefer to work
     % - hospital_capacity: how many doctors can work at each hospital
 
-% Filter out empty entries
-filtered_choices = doctor_choices(any(doctor_choices,2), :)
+% Given a cell array of the of the ranked list of hospitals per doctor
+% we first go through remove any duplicate entries in the rankings. Next 
+% remove the last entry of the ranking if it is more than the listed number
+% of 
+
 % Process incomplete data (less than 5 entries)
 
 % Process bad data (same hospital twice)

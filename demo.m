@@ -1,11 +1,6 @@
-[capacity, test_data] = test();
+[capacity, cost_mat] = test();
 
-[assignment, totalCost] = optimization(test_data);
-
-assignments = test_data(assignment.');
+[assignment, totalCost] = optimization(cost_mat, capacity);
 
 % Display results
-disp('Assignment:');
-disp(assignment);
-disp('Total Cost:');
 disp(totalCost);
