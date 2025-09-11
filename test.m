@@ -1,10 +1,11 @@
 function [capacity, cost_mat] = test()
 % Initialize parameters for test data generation
-    numDoctors = 10; 
     numHospitals = 5; 
-    capacity = ceil(numDoctors/numHospitals);
+    capacity = randi([1, 5], 1, numHospitals);
+    numDoctors = sum(capacity);
     cost_mat = generate_test_data(numDoctors, numHospitals);
     cost_mat = hungarian_test_data(capacity, cost_mat, numDoctors);
+
 end
 
 function cost_mat = generate_test_data(num_doctors, num_hospitals)
@@ -36,7 +37,10 @@ function cost_mat = generate_test_data(num_doctors, num_hospitals)
 end
 
 function cost_mat = hungarian_test_data(capacity, cost_mat, numDoctors)
-    cost_mat = repmat(cost_mat, capacity);
-    cost_mat = cost_mat(1:numDoctors, :);
+    cost_mat_updated = [];
+    for h_index = 1:length(capacity)
+        cost_mat_updated = [cost_mat_updated, repmat(cost_mat(:, h_index), 1, capacity(h_index))];
+    end
+    cost_mat = cost_mat_updated;
 end
     
