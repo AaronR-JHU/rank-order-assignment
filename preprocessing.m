@@ -1,4 +1,4 @@
-function filtered_choices = preprocessing(doctor_choices, capacities)
+function hungarian_mat = preprocessing(doctor_choices, capacities)
     % This function serves to process the input data doctors use to rank
     % hospitals, sanitizing inputs so that no errors are encountered upon
     % optimization as well as converts the data into a cost matrix for the
@@ -12,25 +12,22 @@ function filtered_choices = preprocessing(doctor_choices, capacities)
     % -  capacities: 1xN array of N hospitals with values corresponding to
     %    the capacity of each hospital 
     % Outputs: 
-    % - filtered_choices: Sanitized data with information on where
-    %   each doctor would prefer to work
-    % - hospital_capacity: how many doctors can work at each hospital
-
-% Given a cell array of the of the ranked list of hospitals per doctor
-% we first go through remove any duplicate entries in the rankings. Next 
-% remove the last entry of the ranking if it is more than the listed number
-% of hospitals. Finally, search rankings that are short of choices for the
-% missing choices and add them to the end of the rankings.
-% After processing convert the cell matrix into a matrix and then sort the
-% entries into a cost matrix for the Hungarian algorthm that we use then
-% duplicate the columns of the array based on the capacites of each
-% hostpital.
+    % - hungarian_mat: Sanitized data with information on where
+    %   each doctor would prefer to work with columns duplicated based on
+    %   capacity ready for the hungarian algorithm in optimization function
 
 % Initalizing some useful variables like the number of doctors and
 % hostpitals in the dataset.
 numHos = length(capacities);
 numDoc = length(doctor_choices);
-hospitals = (1:numHos);
+total_cap = sum(capacities);
+
+% Displays an error and stops the function if there is not enough room in
+% all of the hospitals to match every doctor.
+if total_cap < numDoc
+    display('Total hospital capacities is less than total number of doctors so matching can not be completed');
+    return
+end
 
 % Checks each row of doctor choices and first removes any duplicate entries
 % while maintaining order. Then it truncates the row to the length of the
@@ -42,7 +39,7 @@ for k = 1:length(doctor_choices)
     if length(doctor_choices{k}) > numHos
         doctor_choices{k} = doctor_choices{k}(1:numHos);
     end
-    missing = setdiff(doctor_choices{k}, hospitals, 'stable');
+    missing = setdiff(doctor_choices{k}, (1:numHos), 'stable');
     doctor_choices{k} = [doctor_choices{k}, missing]; 
 end
 
@@ -50,8 +47,12 @@ end
 % length.
 doctor_mat = cell2mat(doctor_choices);
 
-% Create the cost matrix out of the rankings by making mapping a 1 to the
-% index of the first value of the cost mat
+% Create the cost matrix for the Hungarian Algorithm out of the rankings by
+% making mapping taking the first value of the doctor choicies matrix and 
+% mapping a 1 to the index of that corresponding value in the cost matrix.
+% example: doctor choices [3, 2, 4, 1], 3 is first choice, 4 is second ect.
+% is mapped to cost matrix [4, 2, 1, 3] each column represents a hospital 
+% the number represents the cost of putting a doctor in that hospital.
 cost_mat = zeros(numDoc, numHos);
     for k = 1:numDoc
         for i = 1:numHos
@@ -59,9 +60,13 @@ cost_mat = zeros(numDoc, numHos);
         end
     end
   
-% Duplicate columns of the cost matrix based on the capacity for the
-% hospital that the column represents. ex hospital with capacity 3 with
-% have the column duplicated 3 times.
-
-% Placeholder so i can test the other parts
-filtered_choices = cost_mat
+% The Hungarian Algorithm does 1-to-1 matching so to get around this the
+% column that represents each hostpital is duplicated based on the capacity
+% for the hospital to multiple matches can be done. 
+% example: hospital with capacity 3 will have the column in the cost matrix
+% duplicated 3 times.
+hungarian_mat = [];
+for h_index = 1:numHos
+    hungarian_mat = [hungarian_mat, repmat(cost_mat(:, h_index), 1, capacities(h_index))];
+end
+    
