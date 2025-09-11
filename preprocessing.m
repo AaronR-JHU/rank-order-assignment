@@ -1,9 +1,12 @@
 function filtered_choices = preprocessing(doctor_choices, capacities)
     % This function serves to process the input data doctors use to rank
     % hospitals, sanitizing inputs so that no errors are encountered upon
-    % optimization
+    % optimization as well as converts the data into a cost matrix for the
+    % later implemented Hungarian Algorithm. Sanitization involves removing
+    % repeat choices in the ranking, cutting of excess choices, and filling
+    % in missing choices.
     % Inputs: 
-    % -  doctor_choices: the choices submitted by doctors (XxN array
+    % -  doctor_choices: the choices submitted by doctors (XxN cell array
     %    containing up to N choices of hospitals submitted by X number of 
     %    doctors on where they would like to work)
     % -  capacities: 1xN array of N hospitals with values corresponding to
@@ -23,11 +26,17 @@ function filtered_choices = preprocessing(doctor_choices, capacities)
 % duplicate the columns of the array based on the capacites of each
 % hostpital.
 
-% Initalizing some useful variables
+% Initalizing some useful variables like the number of doctors and
+% hostpitals in the dataset.
 numHos = length(capacities);
 numDoc = length(doctor_choices);
 hospitals = (1:numHos);
 
+% Checks each row of doctor choices and first removes any duplicate entries
+% while maintaining order. Then it truncates the row to the length of the
+% number of hospitals so there is 1 choice for each hospital. Then it
+% checks the row for any missing hospitals from the ranking and adds them
+% to the end.
 for k = 1:length(doctor_choices)
     doctor_choices{k} = unique(doctor_choices{k}, 'stable');
     if length(doctor_choices{k}) > numHos
@@ -37,10 +46,12 @@ for k = 1:length(doctor_choices)
     doctor_choices{k} = [doctor_choices{k}, missing]; 
 end
 
-% Convert cell array to matrix
+% Convert cell array to matrix now that they are cleaned and the same
+% length.
 doctor_mat = cell2mat(doctor_choices);
 
-% Create the cost matrix
+% Create the cost matrix out of the rankings by making mapping a 1 to the
+% index of the first value of the cost mat
 cost_mat = zeros(numDoc, numHos);
     for k = 1:numDoc
         for i = 1:numHos
