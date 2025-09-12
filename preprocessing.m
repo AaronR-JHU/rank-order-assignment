@@ -6,9 +6,9 @@ function hungarian_mat = preprocessing(doctor_choices, capacities)
     % repeat choices in the ranking, cutting of excess choices, and filling
     % in missing choices.
     % Inputs: 
-    % -  doctor_choices: the choices submitted by doctors (XxN cell array
-    %    containing up to N choices of hospitals submitted by X number of 
-    %    doctors on where they would like to work)
+    % -  doctor_choices: the choices submitted by doctors (Xx1 cell array
+    %    containing up to N choices of hospitals in each cell
+    %    submitted by X number of doctors on where they would like to work)
     % -  capacities: 1xN array of N hospitals with values corresponding to
     %    the capacity of each hospital 
     % Outputs: 
@@ -30,21 +30,21 @@ function hungarian_mat = preprocessing(doctor_choices, capacities)
     end
     
     % Checks each row of doctor choices and first removes any duplicate entries
-    % while maintaining order. Then it truncates the row to the length of the
-    % number of hospitals so there is 1 choice for each hospital. Then it
-    % checks the row for any missing hospitals from the ranking and adds them
-    % to the end.
+    % while maintaining order. Then it removes any values that are not in.
+    % the list of hospitals. Then it checks the row for any missing hospitals 
+    % from the ranking and adds them to the end.
     for k = 1:length(doctor_choices)
         doctor_choices{k} = unique(doctor_choices{k}, 'stable');
-        if length(doctor_choices{k}) > numHos
-            doctor_choices{k} = doctor_choices{k}(1:numHos);
-        end
-        missing = setdiff(doctor_choices{k}, (1:numHos), 'stable');
+        doctor_choices{k} = intersect(doctor_choices{k}, (1:numHos), 'stable');
+        missing = setdiff((1:numHos), doctor_choices{k}, 'stable');
         doctor_choices{k} = [doctor_choices{k}, missing]; 
     end
     
     % Convert cell array to matrix now that they are cleaned and the same
     % length.
+    if isequal(size(doctor_choices), [1, numDoc])
+        doctor_choices = doctor_choices.';
+    end
     doctor_mat = cell2mat(doctor_choices);
     
     % Create the cost matrix for the Hungarian Algorithm out of the rankings by
