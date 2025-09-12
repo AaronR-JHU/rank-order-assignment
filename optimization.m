@@ -20,8 +20,8 @@ function [assignment, totalCost] = optimization(input_data, capacity)
     % Corrects the assignment vector to show the mutiple capacity of each
     % hospital
     assignment = assignment(:,1:numRows);
-(*     assignment = mod(assignment - 1, numCols/capacity) + 1;
- *)
+    % assignment = mod(assignment - 1, numCols/capacity) + 1;
+ 
     assignment = correct_hospital_assignments(assignment, capacity);
 
     % Calculate the total cost of the assignment
@@ -30,6 +30,7 @@ function [assignment, totalCost] = optimization(input_data, capacity)
     % Print out the list of which doctor is assigned to which hospital
     for k = 1:length(assignment)
         fprintf('Doctor %d assigned to Hospital %d\n', k, assignment(k));
+    end
 end
 
 function corrected_assignment = correct_hospital_assignments(og_assignment, capacity)
