@@ -6,7 +6,9 @@ function [capacities, doctor_choices] = test(numHospitals, numDoctors)
     % -  numDoctors: The number of doctors
     % -  numHospitals: The number of hospitals
     % Outputs: 
-    % - doctor_choices: A XxN cell array for X doctors and N hospitals with
+    % - doctor_choices: A Xx1 cell array for X doctors with doctor one having
+    %   a vector of their rankings. (Has built in randomized data errors such
+    %   as repeats, data thats too long, and data thats too short)
     %   randomized selections of hospitals for each doctor
     % - capacities: a 1xN array with each value corresponding to the
     %   capaity of that hospital
