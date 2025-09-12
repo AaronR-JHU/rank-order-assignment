@@ -1,46 +1,59 @@
-function [capacity, cost_mat] = test()
-% Initialize parameters for test data generation
-    numHospitals = 5; 
-    capacity = randi([1, 5], 1, numHospitals);
-    numDoctors = sum(capacity);
-    cost_mat = generate_test_data(numDoctors, numHospitals);
-    cost_mat = hungarian_test_data(capacity, cost_mat, numDoctors);
-
-end
-
-function cost_mat = generate_test_data(num_doctors, num_hospitals)
+function [capacities, doctor_choices] = test(numHospitals, numDoctors)
     % This function serves to generate test data based on the number of
-    % doctors and number of hospital. We assume that each doctor can list
-    % up to N choices given N hospitals
+    % doctors and number of hospitals. We assume that each doctor can list
+    % up to N choices given N hospitals.
     % Inputs: 
-    % -  num_doctors: The number of doctors
-    % -  num_hospitals: The number of hospitals
+    % -  numDoctors: The number of doctors
+    % -  numHospitals: The number of hospitals
     % Outputs: 
-    % - test_data: A XxN array for X doctors and N hospitals with
+    % - doctor_choices: A XxN cell array for X doctors and N hospitals with
     %   randomized selections of hospitals for each doctor
+    % - capacities: a 1xN array with each value corresponding to the
+    %   capaity of that hospital
 
-    % Generate random hospital choices for each doctor
-    test_data = zeros(num_doctors, num_hospitals);
-    for i = 1:num_doctors
-        test_data(i, :) = randperm(num_hospitals, num_hospitals);
+    % Generates some capacities for each of the hospitals with maximum
+    % capacites capped at the number of doctors divided by 5 rounded up so
+    % that one hospital does not get randomized to have way more capacity.
+    capacities = randi([1, ceil(numDoctors/5)], 1, numHospitals);
+
+    % Sums the capacities and makes sure that the total capacity if greater
+    % than the number of doctors. If it is not it takes a random index and
+    % from the capacities vector and adds one before checking the sum
+    % again.
+    sumCap = sum(capacities);
+    while numDoctors > sumCap
+        randind = randi(numHospitals); 
+        capacities(randind) = capacities(randind) + 1;
+        sumCap = sum(capacities);
     end
 
-    % Sort input into cost matrix by looking at value of first entry and map 1 to that index,
-    % in the cost matrix, look at second value map 2 to that index ect.
-    cost_mat = zeros(num_doctors, num_hospitals);
-    for k = 1:num_doctors
-        for i = 1:num_hospitals
-            cost_mat(k, test_data(k,i)) = i;
-        end
-    end
- 
-end
+    % Intialize an empty cell array to put randomized rankings in.
+    doctor_choices = {};
 
-function cost_mat = hungarian_test_data(capacity, cost_mat, numDoctors)
-    cost_mat_updated = [];
-    for h_index = 1:length(capacity)
-        cost_mat_updated = [cost_mat_updated, repmat(cost_mat(:, h_index), 1, capacity(h_index))];
+    % Loops through once for each doctor and adds a vector to the cell
+    % array that is a random ranking of the hospitals.
+    for i = 1:numDoctors
+        doctor_choices{i} = randperm(numHospitals, numHospitals);
     end
-    cost_mat = cost_mat_updated;
-end
     
+    % Adds some random errors to the data that might appear in real data.
+    % It loops through the rounded up number of the number of doctors
+    % divided by 2.5. Each loop it chooses a random index and appends on an
+    % extra random value that is in the range of the number of hospitals.
+    % then it takes another random index for the doctors and a random index
+    % of the hospitals and it adds 1 to it to simulate someone repeating a
+    % number in the rankings or putting a number in that is beyond the
+    % number of hosptials. It generated one final random index and cuts
+    % off the length of the vector at number of hospitals -1 to simulate
+    % someone not ranking all of the hospitals.
+    for k = 1:(ceil(numDoctors/2.5))
+        rand2 = randi(numDoctors);
+        doctor_choices{rand2} = [doctor_choices{rand2}, randi(numHospitals)];
+        rand3 = randi(numDoctors);
+        rand4 = randi(numHospitals);
+        doctor_choices{rand3}(rand4) = doctor_choices{rand3}(rand4) + 1;
+        rand5 = randi(numDoctors);
+        doctor_choices{rand5} = doctor_choices{rand5}(1:numHospitals-1);
+    end
+
+end
