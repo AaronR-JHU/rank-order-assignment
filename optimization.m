@@ -17,25 +17,30 @@ function [assignment, totalCost] = optimization(input_data, capacity)
     %   assigned to the kth doctor
     % - totalCost: Scalar containing total cost of optimal assignment 
    
-
     % Check if the cost matrix is square
-    [numRows, numCols] = size(input_data);
-    if numRows ~= numCols
+    [numDocs, numSeats] = size(input_data);
+    if numDocs < numSeats
         % Adds rows of value inf so hungarian can be run on non-square
         % matrix
         disp('Dummy rows added')
-        input_data = [input_data; inf*ones(numCols-numRows, numCols)]; 
+        input_data = [input_data; inf*ones(numSeats-numDocs, numSeats)]; 
+    end
+
+    % Displays an error and stops the function if there is not enough room in
+    % all of the hospitals to match every doctor.
+    if numSeats < numDocs %Total capacity less than num of doctors
+        error('Total hospital capacity (%d) is less than the number of doctors (%d). Matching cannot be completed.', numSeats, numDocs);
     end
 
     % Obtain optimal assignment using Hungarian algorithm 
     assignment = munkres(input_data);
 
     % Trim assignment to the original number of doctors (exclude dummy rows)
-    assignment = assignment(:,1:numRows);
+    assignment = assignment(1:numDocs);
 
     % Identify the cost of each doctor's assigned seat (row k, column assignment(k))
     % and sum them to obtain the total assignment cost
-    totalCost = sum(input_data(sub2ind(size(input_data), 1:numRows, assignment)));
+    totalCost = sum(input_data(sub2ind(size(input_data), 1:numDocs, assignment)));
 
     % Correct assignments vector such that they correspond to the hospital
     % assigned to each doctor, rather than the seat 
@@ -72,4 +77,15 @@ function corrected_assignment = correct_hospital_assignments(og_assignment, capa
     % Use the lookup list to convert seat assignments into hospital assignments
     corrected_assignment = hospital_capacity_list(og_assignment);
 end
+
+
+
+
+
+
+
+
+
+
+
 
