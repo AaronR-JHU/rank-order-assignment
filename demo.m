@@ -61,7 +61,7 @@ fprintf('Total cost: %d\n', totalCost2);
 
 
 %% 
-disp('Example 3: More capacity than doctors');
+disp('Example 3: Randomly generated preferences with more capacity than doctors');
 [capacities3, doctor_choices3] = test(3, 3); % 3 hospitals, 3 doctors
 capacities3 = capacities3 + 1;  % Extra capacity
 hungarian_mat3 = preprocessing(doctor_choices3, capacities3);
