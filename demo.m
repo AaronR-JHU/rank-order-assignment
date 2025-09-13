@@ -67,7 +67,7 @@ capacities3 = capacities3 + 1;  % Extra capacity
 hungarian_mat3 = preprocessing(doctor_choices3, capacities3);
 [assignment3, totalCost3] = optimization(hungarian_mat3, capacities3);
 fprintf('\nCapacities: '); disp(capacities3);
-fprintf('Doctor choices:\n'); disp(doctor_choices3);
+fprintf('Doctor choices:\n'); disp(doctor_choices3); %Inconsistencies in doctor choices were corrected by preprocessing
 fprintf('Hungarian cost matrix:\n'); disp(hungarian_mat3);
 fprintf('Total cost: %d\n', totalCost3);
 
