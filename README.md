@@ -14,6 +14,7 @@ The algorithm minimizes the total cost, and thereby maximizes overall satisfacti
 
 The code allows for hospitals with varying capacities. However, the total hospital capacity must be greater than or equal to the number of doctors being assigned.
 
+
 Files
 
 demo.m: Example applications of the code. test.m, preprocessing.m, optimization.m, and munkres.m must be in the WD. 
@@ -26,6 +27,7 @@ optimization.m: Obtains the optimal doctor-hospital assignments using the Hungar
 
 munkres.m: Hungarian algorithm implementation (see reference). 
 
+
 Authors
 
 Joey Roberts: preprocessing.m, test.m
@@ -33,6 +35,7 @@ Joey Roberts: preprocessing.m, test.m
 Aaron Roitman: test.m, optimization.m, demo.m
 
 Sibi Pandian (spandia2@jh.edu) : test.m, optimization.m, demo.m
+
 
 Reference
 
