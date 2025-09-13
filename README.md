@@ -1,7 +1,7 @@
-Rank-Order Assignment
-
-Biomedical Data Design - Rank Order Code
-
+**Rank-Order Assignment
+**
+**Biomedical Data Design - Rank Order Code
+**
 This repository provides code to solve a rank-order assignment problem, matching N doctors with K hospitals based on doctor preferences.
 
 The implementation uses the Hungarian algorithm (see reference below) to maximize overall doctor satisfaction. Preferences are converted into costs:
@@ -14,8 +14,8 @@ The algorithm minimizes the total cost, and thereby maximizes overall satisfacti
 
 The code allows for hospitals with varying capacities. However, the total hospital capacity must be greater than or equal to the number of doctors being assigned.
 
-Files
-
+**Files
+**
 demo.m: Example applications of the code.
 
 test.m: Generates test data (hospital capacities and doctor preference orders) given a number of doctors and hospitals.
@@ -24,7 +24,7 @@ preprocessing.m: Generates a cost matrix from the hospital capacities and doctor
 
 optimization.m: Obtains the optimal doctor-hospital assignments using the Hungarian algorithm given the cost matrix. 
 
-Authors
+**Authors**
 
 Joey Roberts: preprocessing.m, test.m
 
@@ -32,8 +32,8 @@ Aaron Roitman: test.m, optimization.m, demo.m
 
 Sibi Pandian (spandia2@jh.edu) : test.m, optimization.m, demo.m
 
-Reference
-
+**Reference
+**
 Munkres' Assignment Algorithm, Modified for Rectangular Matrices
 http://csclab.murraystate.edu/bob.pilgrim/445/munkres.html
 
