@@ -2,7 +2,7 @@ Rank-Order Assignment
 
 Biomedical Data Design - Rank Order Code
 
-This repository provides code to solve a rank-order assignment problem, matching N doctors with K hospitals based on doctor preferences.
+This repository provides MATLAB code to solve a rank-order assignment problem, matching N doctors with K hospitals based on doctor preferences.
 
 The implementation uses the Hungarian algorithm (see reference below) to maximize overall doctor satisfaction. Preferences are converted into costs:
 
@@ -16,13 +16,15 @@ The code allows for hospitals with varying capacities. However, the total hospit
 
 Files
 
-demo.m: Example applications of the code.
+demo.m: Example applications of the code. test.m, preprocessing.m, optimization.m, and munkres.m must be in the WD. 
 
 test.m: Generates test data (hospital capacities and doctor preference orders) given a number of doctors and hospitals.
 
 preprocessing.m: Generates a cost matrix from the hospital capacities and doctor preferences, handling inconsistencies such as cases where doctors do not rank every hospital and adjusting for varied hospital capacities.
 
 optimization.m: Obtains the optimal doctor-hospital assignments using the Hungarian algorithm given the cost matrix. 
+
+munkres.m: Hungarian algorithm implementation (see reference). 
 
 Authors
 
