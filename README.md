@@ -30,8 +30,7 @@ munkres.m: Hungarian algorithm implementation (see reference).
 
 Authors
 
-Joey Roberts: preprocessing.m, test.m
-
+Joey Roberts (jrobe167@jh.edu): preprocessing.m, test.m, optimization.m
 Aaron Roitman: test.m, optimization.m, demo.m
 
 Sibi Pandian (spandia2@jh.edu) : test.m, optimization.m, demo.m
